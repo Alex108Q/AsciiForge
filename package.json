@@ -39,12 +39,14 @@
       "README.md"
     ],
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         "nsis",
         "portable"
       ]
     },
     "linux": {
+      "icon": "build/icon.png",
       "category": "Graphics",
       "target": [
         "AppImage",
@@ -54,6 +56,12 @@
     "nsis": {
       "artifactName": "${productName}-${version}-windows-${arch}-setup.${ext}",
       "oneClick": false,
+      "displayLanguageSelector": true,
+      "installerLanguages": [
+        "en_US",
+        "de_DE"
+      ],
+      "multiLanguageInstaller": true,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
