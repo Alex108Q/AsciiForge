@@ -39,7 +39,7 @@ npm run dist:win
 
 Outputs:
 
-- NSIS installer
+- NSIS installer with English/German language selection
 - Portable `.exe`
 
 Linux:
@@ -54,6 +54,8 @@ Outputs:
 - Debian `.deb` package
 
 Build artifacts are written to `release/`.
+
+The Windows installer language selection is configured in `package.json` under `build.nsis`. Linux AppImage and `.deb` packages use the desktop environment/package manager flow instead of a custom installer wizard.
 
 ## GitHub releases
 
