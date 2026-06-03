@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AsciiForge</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace" aria-label="ASCII generator">
+        <div class="preview-stage">
+          <canvas id="asciiCanvas" width="960" height="540" aria-label="ASCII preview"></canvas>
+          <div id="dropZone" class="drop-zone">
+            <div>
+              <strong>Drop an image or video</strong>
+              <span>or choose a file to begin</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="controls" aria-label="Export controls">
+          <div class="brand">
+            <div>
+              <p>AsciiForge</p>
+              <h1>ASCII image and video exporter</h1>
+            </div>
+            <span id="fileBadge">No file</span>
+          </div>
+
+          <label class="file-picker">
+            <input id="fileInput" type="file" accept="image/*,video/*" />
+            <span>Choose media</span>
+          </label>
+
+          <div class="control-group">
+            <label for="resolution">Resolution</label>
+            <div class="range-row">
+              <input id="resolution" type="range" min="40" max="240" value="120" />
+              <output id="resolutionValue" for="resolution">120 cols</output>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="fontSize">Glyph size</label>
+            <div class="range-row">
+              <input id="fontSize" type="range" min="4" max="18" value="8" />
+              <output id="fontSizeValue" for="fontSize">8 px</output>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="fps">Export FPS</label>
+            <div class="range-row">
+              <input id="fps" type="range" min="6" max="30" value="15" />
+              <output id="fpsValue" for="fps">15 fps</output>
+            </div>
+          </div>
+
+          <fieldset class="segmented">
+            <legend>Color</legend>
+            <label>
+              <input type="radio" name="colorMode" value="color" checked />
+              <span>Color</span>
+            </label>
+            <label>
+              <input type="radio" name="colorMode" value="mono" />
+              <span>Mono</span>
+            </label>
+            <label>
+              <input type="radio" name="colorMode" value="invert" />
+              <span>Invert</span>
+            </label>
+          </fieldset>
+
+          <div class="control-group">
+            <label for="charset">Characters</label>
+            <select id="charset">
+              <option value="dense">Dense: @%#*+=-:. </option>
+              <option value="blocks">Blocks: █▓▒░ </option>
+              <option value="minimal">Minimal: #+. </option>
+              <option value="binary">Binary: 10 </option>
+            </select>
+          </div>
+
+          <div class="video-tools" id="videoTools" hidden>
+            <button id="playPause" type="button">Play</button>
+            <button id="restart" type="button">Restart</button>
+          </div>
+
+          <div class="actions">
+            <button id="exportImage" type="button" disabled>Export image</button>
+            <button id="exportVideo" type="button" disabled>Export video</button>
+          </div>
+
+          <p id="status" class="status">Ready for an image or video.</p>
+        </aside>
+      </section>
+    </main>
+
+    <video id="sourceVideo" playsinline muted hidden></video>
+    <img id="sourceImage" alt="" hidden />
+    <canvas id="sampleCanvas" hidden></canvas>
+    <script src="app.js"></script>
+  </body>
+</html>
