@@ -1,0 +1,65 @@
+{
+  "name": "asciiforge",
+  "version": "0.1.0",
+  "description": "ASCII image and video exporter for the web, Windows, and Linux.",
+  "main": "electron/main.cjs",
+  "private": false,
+  "license": "MIT",
+  "author": "Alex108Q",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux"
+  },
+  "keywords": [
+    "ascii",
+    "image",
+    "video",
+    "converter",
+    "electron"
+  ],
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "dev.asciiforge.app",
+    "productName": "AsciiForge",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "index.html",
+      "styles.css",
+      "app.js",
+      "electron/**/*",
+      "LICENSE",
+      "README.md"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "linux": {
+      "category": "Graphics",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "nsis": {
+      "artifactName": "${productName}-${version}-windows-${arch}-setup.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-windows-${arch}-portable.${ext}"
+    }
+  }
+}
