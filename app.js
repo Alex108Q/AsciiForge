@@ -12,6 +12,7 @@ const elements = {
   fontSizeValue: document.querySelector("#fontSizeValue"),
   fps: document.querySelector("#fps"),
   fpsValue: document.querySelector("#fpsValue"),
+  language: document.querySelector("#language"),
   charset: document.querySelector("#charset"),
   colorModes: document.querySelectorAll("input[name='colorMode']"),
   videoTools: document.querySelector("#videoTools"),
@@ -22,9 +23,92 @@ const elements = {
   status: document.querySelector("#status"),
 };
 
+const translations = {
+  en: {
+    appLabel: "ASCII generator",
+    previewLabel: "ASCII preview",
+    controlsLabel: "Export controls",
+    dropTitle: "Drop an image or video",
+    dropSubtitle: "or choose a file to begin",
+    headline: "ASCII image and video exporter",
+    noFile: "No file",
+    language: "Language",
+    chooseMedia: "Choose media",
+    resolution: "Resolution",
+    glyphSize: "Glyph size",
+    exportFps: "Export FPS",
+    color: "Color",
+    colorModeColor: "Color",
+    colorModeMono: "Mono",
+    colorModeInvert: "Invert",
+    characters: "Characters",
+    charsetDense: "Dense: @%#*+=-:. ",
+    charsetBlocks: "Blocks: []{} ",
+    charsetMinimal: "Minimal: #+. ",
+    charsetBinary: "Binary: 10 ",
+    play: "Play",
+    pause: "Pause",
+    restart: "Restart",
+    exportImage: "Export image",
+    exportVideo: "Export video",
+    ready: "Ready for an image or video.",
+    imageLoaded: "Image loaded. Adjust settings and export.",
+    videoLoaded: "Video loaded. Preview a frame or export ASCII video.",
+    invalidFile: "Please choose an image or video file.",
+    imageExportFailed: "Image export failed.",
+    imageExported: "ASCII image exported as PNG.",
+    recorderUnsupported: "This browser cannot export recorded canvas video.",
+    exportingFrame: "Exporting frame {current} of {total}...",
+    videoExported: "ASCII video exported as WebM.",
+    columnsUnit: "cols",
+    pixelsUnit: "px",
+    fpsUnit: "fps",
+  },
+  de: {
+    appLabel: "ASCII-Generator",
+    previewLabel: "ASCII-Vorschau",
+    controlsLabel: "Export-Einstellungen",
+    dropTitle: "Bild oder Video hier ablegen",
+    dropSubtitle: "oder Datei auswaehlen",
+    headline: "ASCII-Bild- und Video-Exporter",
+    noFile: "Keine Datei",
+    language: "Sprache",
+    chooseMedia: "Datei auswaehlen",
+    resolution: "Aufloesung",
+    glyphSize: "Zeichengroesse",
+    exportFps: "Export-FPS",
+    color: "Farbe",
+    colorModeColor: "Farbe",
+    colorModeMono: "Mono",
+    colorModeInvert: "Invertiert",
+    characters: "Zeichen",
+    charsetDense: "Dicht: @%#*+=-:. ",
+    charsetBlocks: "Bloecke: []{} ",
+    charsetMinimal: "Minimal: #+. ",
+    charsetBinary: "Binaer: 10 ",
+    play: "Abspielen",
+    pause: "Pause",
+    restart: "Neu starten",
+    exportImage: "Bild exportieren",
+    exportVideo: "Video exportieren",
+    ready: "Bereit fuer ein Bild oder Video.",
+    imageLoaded: "Bild geladen. Einstellungen anpassen und exportieren.",
+    videoLoaded: "Video geladen. Vorschau ansehen oder ASCII-Video exportieren.",
+    invalidFile: "Bitte ein Bild oder Video auswaehlen.",
+    imageExportFailed: "Bildexport fehlgeschlagen.",
+    imageExported: "ASCII-Bild als PNG exportiert.",
+    recorderUnsupported: "Dieser Browser kann kein Canvas-Video exportieren.",
+    exportingFrame: "Exportiere Frame {current} von {total}...",
+    videoExported: "ASCII-Video als WebM exportiert.",
+    columnsUnit: "Sp.",
+    pixelsUnit: "px",
+    fpsUnit: "fps",
+  },
+};
+
 const charsets = {
   dense: "@%#*+=-:. ",
-  blocks: "█▓▒░ ",
+  blocks: "[]{} ",
   minimal: "#+. ",
   binary: "10 ",
 };
@@ -36,6 +120,45 @@ let mediaType = null;
 let sourceReady = false;
 let animationId = null;
 let exportInProgress = false;
+let activeStatusKey = "ready";
+let activeStatusValues = {};
+let currentLanguage = localStorage.getItem("asciiforge-language") || navigator.language.slice(0, 2);
+
+if (!translations[currentLanguage]) {
+  currentLanguage = "en";
+}
+
+function t(key, values = {}) {
+  const template = translations[currentLanguage]?.[key] || translations.en[key] || key;
+  return Object.entries(values).reduce(
+    (message, [name, value]) => message.replaceAll(`{${name}}`, value),
+    template
+  );
+}
+
+function applyLanguage() {
+  document.documentElement.lang = currentLanguage;
+  elements.language.value = currentLanguage;
+
+  document.querySelectorAll("[data-i18n]").forEach((node) => {
+    node.textContent = t(node.dataset.i18n);
+  });
+
+  document.querySelectorAll("[data-i18n-attr]").forEach((node) => {
+    node.dataset.i18nAttr.split(",").forEach((pair) => {
+      const [attribute, key] = pair.split(":");
+      node.setAttribute(attribute.trim(), t(key.trim()));
+    });
+  });
+
+  if (!sourceReady) {
+    elements.fileBadge.textContent = t("noFile");
+  }
+
+  elements.playPause.textContent = elements.video.paused ? t("play") : t("pause");
+  updateControlLabels();
+  setStatusKey(activeStatusKey, activeStatusValues, elements.status.classList.contains("error"));
+}
 
 function getSettings() {
   return {
@@ -52,10 +175,16 @@ function setStatus(message, isError = false) {
   elements.status.classList.toggle("error", isError);
 }
 
+function setStatusKey(key, values = {}, isError = false) {
+  activeStatusKey = key;
+  activeStatusValues = values;
+  setStatus(t(key, values), isError);
+}
+
 function updateControlLabels() {
-  elements.resolutionValue.textContent = `${elements.resolution.value} cols`;
-  elements.fontSizeValue.textContent = `${elements.fontSize.value} px`;
-  elements.fpsValue.textContent = `${elements.fps.value} fps`;
+  elements.resolutionValue.textContent = `${elements.resolution.value} ${t("columnsUnit")}`;
+  elements.fontSizeValue.textContent = `${elements.fontSize.value} ${t("pixelsUnit")}`;
+  elements.fpsValue.textContent = `${elements.fps.value} ${t("fpsUnit")}`;
 }
 
 function setUiForMedia(type, fileName) {
@@ -66,8 +195,8 @@ function setUiForMedia(type, fileName) {
   elements.videoTools.hidden = type !== "video";
   elements.exportImage.disabled = false;
   elements.exportVideo.disabled = type !== "video";
-  elements.playPause.textContent = "Play";
-  setStatus(type === "video" ? "Video loaded. Preview a frame or export ASCII video." : "Image loaded. Adjust settings and export.");
+  elements.playPause.textContent = t("play");
+  setStatusKey(type === "video" ? "videoLoaded" : "imageLoaded");
 }
 
 function clearObjectUrls() {
@@ -78,7 +207,7 @@ function clearObjectUrls() {
 function handleFile(file) {
   if (!file) return;
   if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
-    setStatus("Please choose an image or video file.", true);
+    setStatusKey("invalidFile", {}, true);
     return;
   }
 
@@ -203,11 +332,11 @@ function exportImage() {
   renderAscii(source);
   elements.canvas.toBlob((blob) => {
     if (!blob) {
-      setStatus("Image export failed.", true);
+      setStatusKey("imageExportFailed", {}, true);
       return;
     }
     downloadBlob(blob, "ascii-image.png");
-    setStatus("ASCII image exported as PNG.");
+    setStatusKey("imageExported");
   }, "image/png");
 }
 
@@ -235,7 +364,7 @@ function seekVideo(time) {
 async function exportVideo() {
   if (mediaType !== "video" || exportInProgress) return;
   if (!("MediaRecorder" in window)) {
-    setStatus("This browser cannot export recorded canvas video.", true);
+    setStatusKey("recorderUnsupported", {}, true);
     return;
   }
 
@@ -268,7 +397,10 @@ async function exportVideo() {
     const time = Math.min(duration, frame / settings.fps);
     await seekVideo(time);
     renderAscii(elements.video);
-    setStatus(`Exporting frame ${Math.min(frame + 1, frameCount + 1)} of ${frameCount + 1}...`);
+    setStatusKey("exportingFrame", {
+      current: Math.min(frame + 1, frameCount + 1),
+      total: frameCount + 1,
+    });
     await wait(1000 / settings.fps);
   }
 
@@ -278,10 +410,16 @@ async function exportVideo() {
   exportInProgress = false;
   elements.exportVideo.disabled = false;
   elements.exportImage.disabled = false;
-  setStatus("ASCII video exported as WebM.");
+  setStatusKey("videoExported");
 }
 
 elements.fileInput.addEventListener("change", (event) => handleFile(event.target.files[0]));
+
+elements.language.addEventListener("change", () => {
+  currentLanguage = elements.language.value;
+  localStorage.setItem("asciiforge-language", currentLanguage);
+  applyLanguage();
+});
 
 document.addEventListener("dragover", (event) => {
   event.preventDefault();
@@ -309,18 +447,18 @@ elements.playPause.addEventListener("click", async () => {
   if (mediaType !== "video") return;
   if (elements.video.paused) {
     await elements.video.play();
-    elements.playPause.textContent = "Pause";
+    elements.playPause.textContent = t("pause");
     loopPreview();
   } else {
     elements.video.pause();
-    elements.playPause.textContent = "Play";
+    elements.playPause.textContent = t("play");
   }
 });
 
 elements.restart.addEventListener("click", async () => {
   if (mediaType !== "video") return;
   elements.video.pause();
-  elements.playPause.textContent = "Play";
+  elements.playPause.textContent = t("play");
   await seekVideo(0);
   renderAscii(elements.video);
 });
@@ -328,5 +466,5 @@ elements.restart.addEventListener("click", async () => {
 elements.exportImage.addEventListener("click", exportImage);
 elements.exportVideo.addEventListener("click", exportVideo);
 
-updateControlLabels();
+applyLanguage();
 drawBackground(getSettings());

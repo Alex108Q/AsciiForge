@@ -8,33 +8,41 @@
   </head>
   <body>
     <main class="app-shell">
-      <section class="workspace" aria-label="ASCII generator">
+      <section class="workspace" aria-label="ASCII generator" data-i18n-attr="aria-label:appLabel">
         <div class="preview-stage">
-          <canvas id="asciiCanvas" width="960" height="540" aria-label="ASCII preview"></canvas>
+          <canvas id="asciiCanvas" width="960" height="540" aria-label="ASCII preview" data-i18n-attr="aria-label:previewLabel"></canvas>
           <div id="dropZone" class="drop-zone">
             <div>
-              <strong>Drop an image or video</strong>
-              <span>or choose a file to begin</span>
+              <strong data-i18n="dropTitle">Drop an image or video</strong>
+              <span data-i18n="dropSubtitle">or choose a file to begin</span>
             </div>
           </div>
         </div>
 
-        <aside class="controls" aria-label="Export controls">
+        <aside class="controls" aria-label="Export controls" data-i18n-attr="aria-label:controlsLabel">
           <div class="brand">
             <div>
               <p>AsciiForge</p>
-              <h1>ASCII image and video exporter</h1>
+              <h1 data-i18n="headline">ASCII image and video exporter</h1>
             </div>
-            <span id="fileBadge">No file</span>
+            <span id="fileBadge" data-i18n="noFile">No file</span>
+          </div>
+
+          <div class="control-group">
+            <label for="language" data-i18n="language">Language</label>
+            <select id="language">
+              <option value="en">English</option>
+              <option value="de">Deutsch</option>
+            </select>
           </div>
 
           <label class="file-picker">
             <input id="fileInput" type="file" accept="image/*,video/*" />
-            <span>Choose media</span>
+            <span data-i18n="chooseMedia">Choose media</span>
           </label>
 
           <div class="control-group">
-            <label for="resolution">Resolution</label>
+            <label for="resolution" data-i18n="resolution">Resolution</label>
             <div class="range-row">
               <input id="resolution" type="range" min="40" max="240" value="120" />
               <output id="resolutionValue" for="resolution">120 cols</output>
@@ -42,7 +50,7 @@
           </div>
 
           <div class="control-group">
-            <label for="fontSize">Glyph size</label>
+            <label for="fontSize" data-i18n="glyphSize">Glyph size</label>
             <div class="range-row">
               <input id="fontSize" type="range" min="4" max="18" value="8" />
               <output id="fontSizeValue" for="fontSize">8 px</output>
@@ -50,7 +58,7 @@
           </div>
 
           <div class="control-group">
-            <label for="fps">Export FPS</label>
+            <label for="fps" data-i18n="exportFps">Export FPS</label>
             <div class="range-row">
               <input id="fps" type="range" min="6" max="30" value="15" />
               <output id="fpsValue" for="fps">15 fps</output>
@@ -58,42 +66,42 @@
           </div>
 
           <fieldset class="segmented">
-            <legend>Color</legend>
+            <legend data-i18n="color">Color</legend>
             <label>
               <input type="radio" name="colorMode" value="color" checked />
-              <span>Color</span>
+              <span data-i18n="colorModeColor">Color</span>
             </label>
             <label>
               <input type="radio" name="colorMode" value="mono" />
-              <span>Mono</span>
+              <span data-i18n="colorModeMono">Mono</span>
             </label>
             <label>
               <input type="radio" name="colorMode" value="invert" />
-              <span>Invert</span>
+              <span data-i18n="colorModeInvert">Invert</span>
             </label>
           </fieldset>
 
           <div class="control-group">
-            <label for="charset">Characters</label>
+            <label for="charset" data-i18n="characters">Characters</label>
             <select id="charset">
-              <option value="dense">Dense: @%#*+=-:. </option>
-              <option value="blocks">Blocks: █▓▒░ </option>
-              <option value="minimal">Minimal: #+. </option>
-              <option value="binary">Binary: 10 </option>
+              <option value="dense" data-i18n="charsetDense">Dense: @%#*+=-:. </option>
+              <option value="blocks" data-i18n="charsetBlocks">Blocks: []{} </option>
+              <option value="minimal" data-i18n="charsetMinimal">Minimal: #+. </option>
+              <option value="binary" data-i18n="charsetBinary">Binary: 10 </option>
             </select>
           </div>
 
           <div class="video-tools" id="videoTools" hidden>
-            <button id="playPause" type="button">Play</button>
-            <button id="restart" type="button">Restart</button>
+            <button id="playPause" type="button" data-i18n="play">Play</button>
+            <button id="restart" type="button" data-i18n="restart">Restart</button>
           </div>
 
           <div class="actions">
-            <button id="exportImage" type="button" disabled>Export image</button>
-            <button id="exportVideo" type="button" disabled>Export video</button>
+            <button id="exportImage" type="button" disabled data-i18n="exportImage">Export image</button>
+            <button id="exportVideo" type="button" disabled data-i18n="exportVideo">Export video</button>
           </div>
 
-          <p id="status" class="status">Ready for an image or video.</p>
+          <p id="status" class="status" data-i18n="ready">Ready for an image or video.</p>
         </aside>
       </section>
     </main>
