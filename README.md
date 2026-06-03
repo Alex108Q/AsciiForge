@@ -9,6 +9,8 @@ AsciiForge is an ASCII generator for images and videos. Drop in media, choose a 
 - Adjustable character resolution, glyph size, and video export FPS.
 - Color, monochrome, and inverted monochrome modes.
 - Multiple character palettes.
+- English and German UI language support.
+- Desktop app icon included for Windows and Linux builds.
 - No server required for the web version.
 - Windows and Linux desktop packaging through Electron.
 
@@ -37,7 +39,7 @@ npm run dist:win
 
 Outputs:
 
-- NSIS installer
+- NSIS installer with English/German language selection
 - Portable `.exe`
 
 Linux:
@@ -52,6 +54,8 @@ Outputs:
 - Debian `.deb` package
 
 Build artifacts are written to `release/`.
+
+The Windows installer language selection is configured in `package.json` under `build.nsis`. Linux AppImage and `.deb` packages use the desktop environment/package manager flow instead of a custom installer wizard.
 
 ## GitHub releases
 
@@ -69,6 +73,7 @@ To build release files in GitHub:
 - GIF export.
 - Audio passthrough for exported video.
 - Custom character palette input.
+- More UI languages through the existing translation map.
 - Terminal text export.
 - Batch conversion.
 - Presets for social media sizes.
