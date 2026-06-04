@@ -57,7 +57,7 @@ Build artifacts are written to `release/`.
 
 The Windows installer language selection is configured in `package.json` under `build.nsis`. Linux AppImage and `.deb` packages use the desktop environment/package manager flow instead of a custom installer wizard.
 
-READ BEFORE BUILDING: I have changed the code in package.json and .github/workflows/release.yml to have respository secrets so please change it locally before building!
+READ BEFORE BUILDING: I have changed the code in `package.json` and `.github/workflows/release.yml` to have respository secrets so please change it locally before building!
 
 ## GitHub releases
 
