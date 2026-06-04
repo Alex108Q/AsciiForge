@@ -8,7 +8,7 @@
   "author": {
   "name": "Alex108Q",
   "email": "${{ secrets.EMAIL }}"
-}
+},
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder",
