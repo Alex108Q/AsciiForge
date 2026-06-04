@@ -5,8 +5,10 @@
   "main": "electron/main.cjs",
   "private": false,
   "license": "MIT",
-  "author": "Alex108Q",
+  "author": {
+  "name": "Alex108Q",
   "email": "${{ secrets.EMAIL }}"
+}
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder",
