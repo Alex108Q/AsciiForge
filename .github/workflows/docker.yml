@@ -44,5 +44,5 @@ jobs:
           tags: |
             ghcr.io/alex108q/asciiforge:latest
             ghcr.io/alex108q/asciiforge:${{ github.ref_name }}
-            alex108q/asciiforge:latest
-            alex108q/asciiforge:${{ github.ref_name }}
+            alex108wq/asciiforge:latest
+            alex108wq/asciiforge:${{ github.ref_name }}
